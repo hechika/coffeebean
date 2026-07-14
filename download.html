@@ -1,14 +1,41 @@
 <!doctype html>
-<html lang="ko" data-bs-theme="light">
+<html lang="ko" data-bs-theme="light" data-app-theme="light">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
     <meta
       name="description"
       content="커피빈 앱 iOS 및 Android 테스트 버전 다운로드 페이지"
     />
     <meta name="author" content="GoodSoft" />
     <title>커피빈 앱 다운로드</title>
+    <script>
+      (() => {
+        const storageKey = "coffeebean-download-theme";
+        let storedTheme = null;
+
+        try {
+          storedTheme = localStorage.getItem(storageKey);
+        } catch (error) {
+          storedTheme = null;
+        }
+
+        const systemTheme = window.matchMedia?.("(prefers-color-scheme: dark)")
+          ?.matches
+          ? "dark"
+          : "light";
+        const theme =
+          storedTheme === "dark" || storedTheme === "light"
+            ? storedTheme
+            : systemTheme;
+
+        document.documentElement.dataset.bsTheme = theme;
+        document.documentElement.dataset.appTheme = theme;
+      })();
+    </script>
     <link href="assets/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="assets/css/cover_new.css" rel="stylesheet" />
   </head>
@@ -47,6 +74,10 @@
           <a href="#ios-downloads">iOS</a>
           <a href="#install-guide">설치 안내</a>
           <a href="#deeplink-test">딥링크</a>
+        </div>
+        <div class="theme-toggle" role="group" aria-label="화면 테마 선택">
+          <button type="button" data-theme-option="light">라이트</button>
+          <button type="button" data-theme-option="dark">다크</button>
         </div>
       </nav>
 
@@ -491,6 +522,45 @@
         releases: [],
         currentIndex: 0,
       };
+      const themeStorageKey = "coffeebean-download-theme";
+
+      function applyTheme(theme) {
+        const selectedTheme = theme === "dark" ? "dark" : "light";
+        const themeButtons = document.querySelectorAll("[data-theme-option]");
+
+        document.documentElement.dataset.bsTheme = selectedTheme;
+        document.documentElement.dataset.appTheme = selectedTheme;
+
+        themeButtons.forEach((button) => {
+          const isActive = button.dataset.themeOption === selectedTheme;
+          button.classList.toggle("is-active", isActive);
+          button.setAttribute("aria-pressed", String(isActive));
+        });
+      }
+
+      function setupThemeToggle() {
+        const themeButtons = document.querySelectorAll("[data-theme-option]");
+
+        themeButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            const theme = button.dataset.themeOption;
+
+            if (theme !== "dark" && theme !== "light") {
+              return;
+            }
+
+            try {
+              localStorage.setItem(themeStorageKey, theme);
+            } catch (error) {
+              // 테마 저장이 막힌 환경에서도 현재 화면의 테마 전환은 유지합니다.
+            }
+
+            applyTheme(theme);
+          });
+        });
+
+        applyTheme(document.documentElement.dataset.appTheme);
+      }
 
       async function loadManifestVersion(manifestPath) {
         const response = await fetch(manifestPath, { cache: "no-store" });
@@ -776,6 +846,7 @@
 
       setupDownloadCards();
       setupReleaseNoteNavigation();
+      setupThemeToggle();
 
       function isMobileAppTestDevice() {
         const userAgent = navigator.userAgent || "";
