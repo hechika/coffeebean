@@ -229,6 +229,13 @@ function compareReleaseEntries(left, right) {
   return normalizeBuildNumber(left.buildNumber) - normalizeBuildNumber(right.buildNumber);
 }
 
+function isSameReleaseEntry(left, right) {
+  return (
+    left?.version === right?.version &&
+    normalizeBuildNumber(left?.buildNumber) === normalizeBuildNumber(right?.buildNumber)
+  );
+}
+
 function compareVersions(left, right) {
   const leftParts = String(left).split(/[.+-]/);
   const rightParts = String(right).split(/[.+-]/);
@@ -286,11 +293,14 @@ export function updateIosRelease(args) {
     title,
   });
 
-  writeText(latestManifestPath, manifestContent);
   writeText(historyManifestPath, manifestContent);
 
   const manifestUrl = `${SITE_BASE_URL}/${historyManifestPath}`;
   const downloadUrl = `itms-services://?action=download-manifest&url=${manifestUrl}`;
+  const currentRelease = {
+    version,
+    buildNumber,
+  };
 
   upsertRelease(releases, {
     env,
@@ -300,6 +310,11 @@ export function updateIosRelease(args) {
     notes: args.notes,
     downloadUrl,
   });
+
+  const latestRelease = releases.ios[env][releases.ios[env].length - 1];
+  if (isSameReleaseEntry(latestRelease, currentRelease)) {
+    writeText(latestManifestPath, manifestContent);
+  }
 
   writeText("releases.json", `${JSON.stringify(releases, null, 2)}\n`);
 
