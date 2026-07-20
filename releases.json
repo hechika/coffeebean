@@ -1,39 +1,14 @@
 {
   "ios": {
-    "dev": [
-      {
-        "version": "2.0.66",
-        "releasedAt": "2026-06-18",
-        "downloadUrl": "itms-services://?action=download-manifest&url=https://hechika.github.io/coffeebean/manifests/ios/hist/manifest_dev_2.0.66.plist",
-        "notes": [
-          "25주년 기념 선불카드 추가"
-        ]
-      },
-      {
-        "version": "2.0.67",
-        "releasedAt": "2026-07-10",
-        "downloadUrl": "itms-services://?action=download-manifest&url=https://hechika.github.io/coffeebean/manifests/ios/hist/manifest_dev_2.0.67.plist",
-        "notes": [
-          "퀵계좌이체 결제수단 추가"
-        ]
-      },
-      {
-        "version": "2.0.67",
-        "buildNumber": 2,
-        "releasedAt": "2026-07-20",
-        "downloadUrl": "itms-services://?action=download-manifest&url=https://hechika.github.io/coffeebean/manifests/ios/hist/manifest_dev_2.0.67_build_2.plist",
-        "notes": [
-          "자동 배포 스크립트 테스트"
-        ]
-      }
-    ],
+    "dev": [],
     "stg": [
       {
         "version": "2.0.67",
+        "buildNumber": 1,
         "releasedAt": "2026-07-10",
-        "downloadUrl": "itms-services://?action=download-manifest&url=https://hechika.github.io/coffeebean/manifests/ios/hist/manifest_stg_2.0.67.plist",
+        "downloadUrl": "itms-services://?action=download-manifest&url=https://hechika.github.io/coffeebean/manifests/ios/hist/manifest_stg_2.0.67_build_1.plist",
         "notes": [
-          "퀵계좌이체 결제수단 추가"
+          "업데이트 내용"
         ]
       }
     ]
