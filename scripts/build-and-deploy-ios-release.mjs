@@ -8,6 +8,7 @@ import {
   deployIosRelease,
   ensureGhAuth,
   parseDeployArgs,
+  resolveBuildNumber,
   run,
   UsageError,
 } from "./deploy-ios-release.mjs";
@@ -38,7 +39,7 @@ Options:
   --project <name.xcodeproj>         workspace가 없을 때 사용할 project
   --scheme <name>                    archive할 scheme. 기본값: Coffeebean_Dev 또는 Coffeebean_Stg
   --configuration <name>             빌드 configuration. 기본값: Release
-  --build-number <number>            CURRENT_PROJECT_VERSION override
+  --build-number <number>            같은 버전 내 빌드 번호. 생략하면 자동 산정
   --export-options-plist <path>      xcodebuild -exportArchive용 ExportOptions.plist. 생략하면 자동 생성
   --export-method <method>           ExportOptions method. 기본값: ${DEFAULT_EXPORT_METHOD}
   --team-id <id>                     Apple Developer Team ID. 기본값: ${DEFAULT_TEAM_ID}
@@ -178,6 +179,10 @@ function validateBuildArgs(args) {
 
   if (args["released-at"] && !/^\d{4}-\d{2}-\d{2}$/.test(args["released-at"])) {
     throw new UsageError("--released-at must use YYYY-MM-DD");
+  }
+
+  if (args["build-number"] && !/^\d+$/.test(args["build-number"])) {
+    throw new UsageError("--build-number must be a positive integer");
   }
 
   if (args["skip-build"]) {
@@ -330,6 +335,15 @@ function main() {
   }
 
   validateBuildArgs(args);
+  const buildNumber = resolveBuildNumber(args);
+  args["build-number"] = String(buildNumber);
+  if (args["archive-path"] === `.build/ios/${args.env}-${args.version}.xcarchive`) {
+    args["archive-path"] = `.build/ios/${args.env}-${args.version}-build-${buildNumber}.xcarchive`;
+  }
+  if (args["export-path"] === `.build/ios/export-${args.env}-${args.version}`) {
+    args["export-path"] = `.build/ios/export-${args.env}-${args.version}-build-${buildNumber}`;
+  }
+  logStep(`배포 빌드 번호: build ${buildNumber}`);
   logStep("GitHub 인증 확인 중");
   ensureGhAuth();
 

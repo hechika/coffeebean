@@ -611,14 +611,16 @@
         }
 
         if (version) {
-          const matchedRelease = releaseList.find(
-            (release) => release.version === version,
-          );
+          for (let index = releaseList.length - 1; index >= 0; index -= 1) {
+            if (releaseList[index]?.version === version) {
+              return releaseList[index];
+            }
+          }
 
-          return matchedRelease || null;
+          return null;
         }
 
-        return releaseList[0];
+        return releaseList[releaseList.length - 1];
       }
 
       function getReleaseList(releases, platform, env) {
@@ -728,7 +730,9 @@
         document.querySelector("[data-release-note-title]").textContent =
           `${title} 업데이트 노트`;
         document.querySelector("[data-release-note-version]").textContent =
-          release.version ? `버전 ${release.version}` : "";
+          release.version
+            ? `버전 ${release.version}${release.buildNumber ? ` build ${release.buildNumber}` : ""}`
+            : "";
         document.querySelector("[data-release-note-date]").textContent =
           formatReleaseDate(release.releasedAt);
         document.querySelector("[data-release-note-position]").textContent =

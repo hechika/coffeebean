@@ -25,6 +25,7 @@ Options:
   --version <x.y.z>        앱 버전
   --ipa <path>             업로드할 IPA 파일 경로
   --released-at <date>     배포일. YYYY-MM-DD 형식. 생략하면 오늘 날짜 사용
+  --build-number <number>  같은 버전 내 빌드 번호. 생략하면 자동 산정
   --note <text>            업데이트 노트. 여러 번 입력 가능
   --notes <a|b|c>          파이프(|)로 구분한 업데이트 노트 목록
   --repo <owner/name>      GitHub 저장소. 기본값: ${DEFAULT_REPO}
@@ -162,6 +163,10 @@ function printUpdateUsageIfInvalid(args) {
   if (args["released-at"] && !/^\d{4}-\d{2}-\d{2}$/.test(args["released-at"])) {
     throw new UsageError("--released-at must use YYYY-MM-DD");
   }
+
+  if (args["build-number"] && !/^\d+$/.test(args["build-number"])) {
+    throw new UsageError("--build-number must be a positive integer");
+  }
 }
 
 export function run(command, args, options = {}) {
@@ -223,21 +228,12 @@ export function releaseExists({ repo, tag }) {
   throw new Error(output.trim() || `Could not check release ${tag}`);
 }
 
-export function createOrUploadRelease({ args, tag, ipaPath }) {
-  const title = `iOS ${args.env.toUpperCase()} ${args.version}`;
+export function createOrUploadRelease({ args, tag, ipaPath, buildNumber }) {
+  const title = `iOS ${args.env.toUpperCase()} ${args.version} build ${buildNumber}`;
   const notes = args.notes.length ? args.notes.join("\n") : title;
 
   if (releaseExists({ repo: args.repo, tag })) {
-    run("gh", [
-      "release",
-      "upload",
-      tag,
-      ipaPath,
-      "--repo",
-      args.repo,
-      "--clobber",
-    ]);
-    return;
+    throw new Error(`이미 존재하는 GitHub Release입니다: ${tag}`);
   }
 
   const releaseArgs = [
@@ -262,6 +258,25 @@ export function createOrUploadRelease({ args, tag, ipaPath }) {
   }
 
   run("gh", releaseArgs);
+}
+
+export function resolveBuildNumber(args) {
+  if (args["build-number"]) {
+    return normalizeBuildNumber(args["build-number"]);
+  }
+
+  const releasesPath = path.join(ROOT_DIR, "releases.json");
+  const releases = JSON.parse(fs.readFileSync(releasesPath, "utf8"));
+  const matchingBuilds = (releases.ios?.[args.env] || [])
+    .filter((release) => release.version === args.version)
+    .map((release) => normalizeBuildNumber(release.buildNumber));
+
+  return matchingBuilds.length ? Math.max(...matchingBuilds) + 1 : 1;
+}
+
+function normalizeBuildNumber(value) {
+  const number = Number(value);
+  return Number.isInteger(number) && number > 0 ? number : 1;
 }
 
 export function assetDownloadUrl({ repo, tag, ipaPath }) {
@@ -291,7 +306,7 @@ export function commitAndPush({ args, paths }) {
   run("git", [
     "commit",
     "-m",
-    `Deploy iOS ${args.env.toUpperCase()} ${args.version}`,
+    `Deploy iOS ${args.env.toUpperCase()} ${args.version} build ${args["build-number"]}`,
   ]);
 
   if (args.push) {
@@ -301,14 +316,16 @@ export function commitAndPush({ args, paths }) {
 
 export function deployIosRelease(args, options = {}) {
   const ipaPath = path.resolve(ROOT_DIR, args.ipa);
-  const tag = `ios-${args.env}-${args.version}`;
+  const buildNumber = resolveBuildNumber(args);
+  args["build-number"] = String(buildNumber);
+  const tag = `ios-${args.env}-${args.version}-build.${buildNumber}`;
   const ipaUrl = assetDownloadUrl({
     repo: args.repo,
     tag,
     ipaPath,
   });
   const latestManifestPath = `IPA/manifest_${args.env}.plist`;
-  const historyManifestPath = `IPA/hist/manifest_${args.env}_${args.version}.plist`;
+  const historyManifestPath = `IPA/hist/manifest_${args.env}_${args.version}_build_${buildNumber}.plist`;
   const changedPaths = [latestManifestPath, historyManifestPath, "releases.json"];
 
   if (!options.skipAuth) {
@@ -316,8 +333,8 @@ export function deployIosRelease(args, options = {}) {
     ensureGhAuth();
   }
 
-  logStep("GitHub Release에 IPA 업로드 중");
-  createOrUploadRelease({ args, tag, ipaPath });
+  logStep(`GitHub Release에 IPA 업로드 중 (build ${buildNumber})`);
+  createOrUploadRelease({ args, tag, ipaPath, buildNumber });
 
   logStep("다운로드 페이지 배포 파일 갱신 중");
   updateIosRelease({
@@ -325,6 +342,7 @@ export function deployIosRelease(args, options = {}) {
     version: args.version,
     "ipa-url": ipaUrl,
     "released-at": args["released-at"],
+    "build-number": String(buildNumber),
     notes: args.notes,
     quiet: true,
   });
@@ -333,7 +351,7 @@ export function deployIosRelease(args, options = {}) {
   commitAndPush({ args, paths: changedPaths });
 
   console.log("");
-  console.log(`완료: iOS ${args.env.toUpperCase()} ${args.version}`);
+  console.log(`완료: iOS ${args.env.toUpperCase()} ${args.version} build ${buildNumber}`);
   console.log(`Release: https://github.com/${args.repo}/releases/tag/${tag}`);
 }
 

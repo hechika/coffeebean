@@ -5,18 +5,13 @@
         "version": "2.0.66",
         "releasedAt": "2026-06-18",
         "downloadUrl": "itms-services://?action=download-manifest&url=https://hechika.github.io/coffeebean/IPA/hist/manifest_dev_2.0.66.plist",
-        "notes": [
-          "25주년 기념 선불카드 추가"
-        ]
+        "notes": ["25주년 기념 선불카드 추가"]
       },
       {
         "version": "2.0.67",
-        "releasedAt": "2026-07-20",
+        "releasedAt": "2026-07-10",
         "downloadUrl": "itms-services://?action=download-manifest&url=https://hechika.github.io/coffeebean/IPA/hist/manifest_dev_2.0.67.plist",
-        "notes": [
-          "2.0.67 빌드 2",
-          "퀵계좌이체 결제수단 추가"
-        ]
+        "notes": ["퀵계좌이체 결제수단 추가"]
       }
     ],
     "stg": [
@@ -24,9 +19,7 @@
         "version": "2.0.67",
         "releasedAt": "2026-07-10",
         "downloadUrl": "itms-services://?action=download-manifest&url=https://hechika.github.io/coffeebean/IPA/hist/manifest_stg_2.0.67.plist",
-        "notes": [
-          "퀵계좌이체 결제수단 추가"
-        ]
+        "notes": ["퀵계좌이체 결제수단 추가"]
       }
     ]
   },

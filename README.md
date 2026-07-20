@@ -6,17 +6,17 @@
 
 ## 주요 파일
 
-| 파일                                      | 역할                                                                   |
-| ----------------------------------------- | ---------------------------------------------------------------------- |
-| `download.html`                           | 앱 다운로드 카드, 설치 안내, 업데이트 노트 모달을 표시하는 메인 페이지 |
-| `releases.json`                           | 버전별 업데이트 날짜, 업데이트 노트, 이전 버전 다운로드 URL 관리       |
-| `IPA/manifest_dev.plist`                  | iOS DEV 최신 설치 manifest                                             |
-| `IPA/manifest_stg.plist`                  | iOS STG 최신 설치 manifest                                             |
-| `IPA/hist/manifest_{env}_{version}.plist` | iOS 이전 버전 설치용 manifest                                          |
-| `assets/css/cover.css`                    | 다운로드 페이지 스타일                                                 |
+| 파일                                       | 역할                                                                   |
+| ------------------------------------------ | ---------------------------------------------------------------------- |
+| `download.html`                            | 앱 다운로드 카드, 설치 안내, 업데이트 노트 모달을 표시하는 메인 페이지 |
+| `releases.json`                            | 버전별 업데이트 날짜, 업데이트 노트, 이전 버전 다운로드 URL 관리       |
+| `IPA/manifest_dev.plist`                   | iOS DEV 최신 설치 manifest                                             |
+| `IPA/manifest_stg.plist`                   | iOS STG 최신 설치 manifest                                             |
+| `IPA/hist/manifest_{env}_{version}.plist`  | iOS 이전 버전 설치용 manifest                                          |
+| `assets/css/cover.css`                     | 다운로드 페이지 스타일                                                 |
 | `scripts/build-and-deploy-ios-release.mjs` | iOS 프로젝트 빌드, IPA 생성, GitHub Releases 업로드, Pages 배포 자동화 |
-| `scripts/deploy-ios-release.mjs`          | iOS IPA 업로드부터 GitHub Pages 배포까지 자동화하는 스크립트           |
-| `scripts/update-ios-release.mjs`          | iOS manifest와 `releases.json` 업데이트 자동화 스크립트                |
+| `scripts/deploy-ios-release.mjs`           | iOS IPA 업로드부터 GitHub Pages 배포까지 자동화하는 스크립트           |
+| `scripts/update-ios-release.mjs`           | iOS manifest와 `releases.json` 업데이트 자동화 스크립트                |
 
 ## 공통 업데이트 원칙
 
@@ -33,6 +33,7 @@ iOS는 APK처럼 파일을 직접 다운로드하는 방식이 아니라 `itms-s
 ### 빌드부터 배포까지 전체 자동화
 
 현재 폴더 구조에서는 iOS 앱 소스가 `../coffeebean-membership-ios`에 있고, 스크립트가 `Coffeebean.xcworkspace`, DEV/STG scheme, AdHoc ExportOptions를 기본값으로 사용합니다. 따라서 보통은 환경, 버전, 업데이트 노트만 지정하면 IPA 생성부터 GitHub Pages 배포까지 한 번에 처리됩니다.
+
 
 ```bash
 node scripts/build-and-deploy-ios-release.mjs \
@@ -51,6 +52,14 @@ node scripts/build-and-deploy-ios-release.mjs \
   --released-at 2026-07-20 \
   --note "업데이트 내용"
 ```
+
+같은 버전 재배포와 빌드 번호:
+
+- 같은 앱 버전을 다시 배포하면 기존 배포를 덮어쓰지 않고 다음 빌드 번호로 등록합니다.
+- 예: 기존 `2.0.68 build 1`이 있으면 다음 `2.0.68` 배포는 자동으로 `build 2`가 됩니다.
+- GitHub Release 태그는 `ios-dev-2.0.68-build.2`처럼 생성됩니다.
+- 히스토리 manifest는 `IPA/hist/manifest_dev_2.0.68_build_2.plist`처럼 빌드별로 보존됩니다.
+- 특정 빌드 번호를 직접 지정하려면 `--build-number 3`을 사용합니다. 이미 같은 태그가 있으면 덮어쓰지 않고 실패합니다.
 
 빌드 자동화 스크립트가 처리하는 항목:
 

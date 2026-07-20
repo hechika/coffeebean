@@ -18,6 +18,7 @@ Options:
   --version <x.y.z>        앱 버전
   --ipa-url <https-url>    GitHub Releases 등에 업로드된 IPA 파일 URL
   --released-at <date>     배포일. YYYY-MM-DD 형식. 생략하면 오늘 날짜 사용
+  --build-number <number>  같은 버전 내 빌드 번호. 생략하면 자동 산정
   --note <text>            업데이트 노트. 여러 번 입력 가능
   --notes <a|b|c>          파이프(|)로 구분한 업데이트 노트 목록
   --help                   도움말 출력
@@ -96,6 +97,10 @@ export function validateArgs(args) {
   if (args["released-at"] && !/^\d{4}-\d{2}-\d{2}$/.test(args["released-at"])) {
     throw new Error("--released-at must use YYYY-MM-DD");
   }
+
+  if (args["build-number"] && !/^\d+$/.test(args["build-number"])) {
+    throw new Error("--build-number must be a positive integer");
+  }
 }
 
 function readText(relativePath) {
@@ -165,12 +170,13 @@ function createManifest({ ipaUrl, version, bundleIdentifier, title }) {
 `;
 }
 
-function upsertRelease(releases, { env, version, releasedAt, notes, downloadUrl }) {
+function upsertRelease(releases, { env, version, buildNumber, releasedAt, notes, downloadUrl }) {
   releases.ios ||= {};
   releases.ios[env] ||= [];
 
   const nextRelease = {
     version,
+    buildNumber,
     releasedAt,
     downloadUrl,
   };
@@ -180,7 +186,9 @@ function upsertRelease(releases, { env, version, releasedAt, notes, downloadUrl 
   }
 
   const existingIndex = releases.ios[env].findIndex(
-    (release) => release.version === version,
+    (release) =>
+      release.version === version &&
+      normalizeBuildNumber(release.buildNumber) === buildNumber,
   );
 
   if (existingIndex >= 0) {
@@ -192,7 +200,33 @@ function upsertRelease(releases, { env, version, releasedAt, notes, downloadUrl 
     releases.ios[env].push(nextRelease);
   }
 
-  releases.ios[env].sort((a, b) => compareVersions(a.version, b.version));
+  releases.ios[env].sort(compareReleaseEntries);
+}
+
+function normalizeBuildNumber(value) {
+  const number = Number(value);
+  return Number.isInteger(number) && number > 0 ? number : 1;
+}
+
+function resolveBuildNumber(releases, env, version, requestedBuildNumber) {
+  if (requestedBuildNumber) {
+    return normalizeBuildNumber(requestedBuildNumber);
+  }
+
+  const matchingBuilds = (releases.ios?.[env] || [])
+    .filter((release) => release.version === version)
+    .map((release) => normalizeBuildNumber(release.buildNumber));
+
+  return matchingBuilds.length ? Math.max(...matchingBuilds) + 1 : 1;
+}
+
+function compareReleaseEntries(left, right) {
+  const versionCompared = compareVersions(left.version, right.version);
+  if (versionCompared !== 0) {
+    return versionCompared;
+  }
+
+  return normalizeBuildNumber(left.buildNumber) - normalizeBuildNumber(right.buildNumber);
 }
 
 function compareVersions(left, right) {
@@ -228,8 +262,15 @@ export function updateIosRelease(args) {
   const ipaUrl = args["ipa-url"];
   const releasedAt =
     args["released-at"] || new Date().toISOString().slice(0, 10);
+  const releases = JSON.parse(readText("releases.json"));
+  const buildNumber = resolveBuildNumber(
+    releases,
+    env,
+    version,
+    args["build-number"],
+  );
   const latestManifestPath = `IPA/manifest_${env}.plist`;
-  const historyManifestPath = `IPA/hist/manifest_${env}_${version}.plist`;
+  const historyManifestPath = `IPA/hist/manifest_${env}_${version}_build_${buildNumber}.plist`;
   const latestManifest = readText(latestManifestPath);
   const bundleIdentifier = extractPlistValue(latestManifest, "bundle-identifier");
   const title = extractPlistValue(latestManifest, "title");
@@ -248,13 +289,13 @@ export function updateIosRelease(args) {
   writeText(latestManifestPath, manifestContent);
   writeText(historyManifestPath, manifestContent);
 
-  const releases = JSON.parse(readText("releases.json"));
   const manifestUrl = `${SITE_BASE_URL}/${historyManifestPath}`;
   const downloadUrl = `itms-services://?action=download-manifest&url=${manifestUrl}`;
 
   upsertRelease(releases, {
     env,
     version,
+    buildNumber,
     releasedAt,
     notes: args.notes,
     downloadUrl,
@@ -263,7 +304,7 @@ export function updateIosRelease(args) {
   writeText("releases.json", `${JSON.stringify(releases, null, 2)}\n`);
 
   if (!args.quiet) {
-    console.log(`배포 파일 갱신 완료: iOS ${env.toUpperCase()} ${version}`);
+    console.log(`배포 파일 갱신 완료: iOS ${env.toUpperCase()} ${version} build ${buildNumber}`);
   }
 }
 
