@@ -653,6 +653,20 @@
         meta.hidden = false;
       }
 
+      function getBuildNumber(release) {
+        const buildNumber = Number(release?.buildNumber);
+        return Number.isInteger(buildNumber) && buildNumber > 0
+          ? buildNumber
+          : 1;
+      }
+
+      function isSameRelease(left, right) {
+        return (
+          left?.version === right?.version &&
+          getBuildNumber(left) === getBuildNumber(right)
+        );
+      }
+
       function bindReleaseNoteButton(card, release, releaseList) {
         const button = card.querySelector("[data-release-note-button]");
         const notes = release?.notes || [];
@@ -669,7 +683,7 @@
           );
           const currentIndex = Math.max(
             0,
-            noteReleases.findIndex((item) => item.version === release.version),
+            noteReleases.findIndex((item) => isSameRelease(item, release)),
           );
           renderReleaseNoteModal(card, noteReleases, currentIndex);
         });
