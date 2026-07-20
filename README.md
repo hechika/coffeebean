@@ -6,17 +6,17 @@
 
 ## 주요 파일
 
-| 파일                                       | 역할                                                                   |
-| ------------------------------------------ | ---------------------------------------------------------------------- |
-| `download.html`                            | 앱 다운로드 카드, 설치 안내, 업데이트 노트 모달을 표시하는 메인 페이지 |
-| `releases.json`                            | 버전별 업데이트 날짜, 업데이트 노트, 이전 버전 다운로드 URL 관리       |
-| `manifests/ios/manifest_dev.plist`                   | iOS DEV 최신 설치 manifest                                             |
-| `manifests/ios/manifest_stg.plist`                   | iOS STG 최신 설치 manifest                                             |
-| `manifests/ios/hist/manifest_{env}_{version}.plist`  | iOS 이전 버전 설치용 manifest                                          |
-| `assets/css/cover.css`                     | 다운로드 페이지 스타일                                                 |
-| `scripts/build-and-deploy-ios-release.mjs` | iOS 프로젝트 빌드, IPA 생성, GitHub Releases 업로드, Pages 배포 자동화 |
-| `scripts/deploy-ios-release.mjs`           | iOS IPA 업로드부터 GitHub Pages 배포까지 자동화하는 스크립트           |
-| `scripts/update-ios-release.mjs`           | iOS manifest와 `releases.json` 업데이트 자동화 스크립트                |
+| 파일                                                | 역할                                                                   |
+| --------------------------------------------------- | ---------------------------------------------------------------------- |
+| `download.html`                                     | 앱 다운로드 카드, 설치 안내, 업데이트 노트 모달을 표시하는 메인 페이지 |
+| `releases.json`                                     | 버전별 업데이트 날짜, 업데이트 노트, 이전 버전 다운로드 URL 관리       |
+| `manifests/ios/manifest_dev.plist`                  | iOS DEV 최신 설치 manifest                                             |
+| `manifests/ios/manifest_stg.plist`                  | iOS STG 최신 설치 manifest                                             |
+| `manifests/ios/hist/manifest_{env}_{version}.plist` | iOS 이전 버전 설치용 manifest                                          |
+| `assets/css/cover.css`                              | 다운로드 페이지 스타일                                                 |
+| `scripts/build-and-deploy-ios-release.mjs`          | iOS 프로젝트 빌드, IPA 생성, GitHub Releases 업로드, Pages 배포 자동화 |
+| `scripts/deploy-ios-release.mjs`                    | iOS IPA 업로드부터 GitHub Pages 배포까지 자동화하는 스크립트           |
+| `scripts/update-ios-release.mjs`                    | iOS manifest와 `releases.json` 업데이트 자동화 스크립트                |
 
 ## 공통 업데이트 원칙
 
