@@ -269,8 +269,8 @@ export function updateIosRelease(args) {
     version,
     args["build-number"],
   );
-  const latestManifestPath = `IPA/manifest_${env}.plist`;
-  const historyManifestPath = `IPA/hist/manifest_${env}_${version}_build_${buildNumber}.plist`;
+  const latestManifestPath = `manifests/ios/manifest_${env}.plist`;
+  const historyManifestPath = `manifests/ios/hist/manifest_${env}_${version}_build_${buildNumber}.plist`;
   const latestManifest = readText(latestManifestPath);
   const bundleIdentifier = extractPlistValue(latestManifest, "bundle-identifier");
   const title = extractPlistValue(latestManifest, "title");

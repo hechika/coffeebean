@@ -324,8 +324,8 @@ export function deployIosRelease(args, options = {}) {
     tag,
     ipaPath,
   });
-  const latestManifestPath = `IPA/manifest_${args.env}.plist`;
-  const historyManifestPath = `IPA/hist/manifest_${args.env}_${args.version}_build_${buildNumber}.plist`;
+  const latestManifestPath = `manifests/ios/manifest_${args.env}.plist`;
+  const historyManifestPath = `manifests/ios/hist/manifest_${args.env}_${args.version}_build_${buildNumber}.plist`;
   const changedPaths = [latestManifestPath, historyManifestPath, "releases.json"];
 
   if (!options.skipAuth) {
