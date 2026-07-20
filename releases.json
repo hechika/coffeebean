@@ -2,6 +2,15 @@
   "ios": {
     "dev": [
       {
+        "version": "2.0.66",
+        "buildNumber": 1,
+        "releasedAt": "2026-06-18",
+        "downloadUrl": "itms-services://?action=download-manifest&url=https://hechika.github.io/coffeebean/manifests/ios/hist/manifest_dev_2.0.66_build_1.plist",
+        "notes": [
+          "25주년 기념 선불카드 추가"
+        ]
+      },
+      {
         "version": "2.0.67",
         "buildNumber": 1,
         "releasedAt": "2026-07-10",
