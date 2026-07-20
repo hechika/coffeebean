@@ -14,6 +14,9 @@
 | `IPA/manifest_stg.plist`                  | iOS STG 최신 설치 manifest                                             |
 | `IPA/hist/manifest_{env}_{version}.plist` | iOS 이전 버전 설치용 manifest                                          |
 | `assets/css/cover.css`                    | 다운로드 페이지 스타일                                                 |
+| `scripts/build-and-deploy-ios-release.mjs` | iOS 프로젝트 빌드, IPA 생성, GitHub Releases 업로드, Pages 배포 자동화 |
+| `scripts/deploy-ios-release.mjs`          | iOS IPA 업로드부터 GitHub Pages 배포까지 자동화하는 스크립트           |
+| `scripts/update-ios-release.mjs`          | iOS manifest와 `releases.json` 업데이트 자동화 스크립트                |
 
 ## 공통 업데이트 원칙
 
@@ -26,6 +29,154 @@
 ## iOS 앱 업데이트 관리
 
 iOS는 APK처럼 파일을 직접 다운로드하는 방식이 아니라 `itms-services://` URL이 plist manifest를 읽고, manifest 안의 IPA URL을 통해 설치를 시작합니다.
+
+### 빌드부터 배포까지 전체 자동화
+
+현재 폴더 구조에서는 iOS 앱 소스가 `../coffeebean-membership-ios`에 있고, 스크립트가 `Coffeebean.xcworkspace`, DEV/STG scheme, AdHoc ExportOptions를 기본값으로 사용합니다. 따라서 보통은 환경, 버전, 업데이트 노트만 지정하면 IPA 생성부터 GitHub Pages 배포까지 한 번에 처리됩니다.
+
+```bash
+node scripts/build-and-deploy-ios-release.mjs \
+  --env dev \
+  --version 2.0.68 \
+  --released-at 2026-07-20 \
+  --note "업데이트 내용"
+```
+
+STG 배포 예시:
+
+```bash
+node scripts/build-and-deploy-ios-release.mjs \
+  --env stg \
+  --version 2.0.68 \
+  --released-at 2026-07-20 \
+  --note "업데이트 내용"
+```
+
+빌드 자동화 스크립트가 처리하는 항목:
+
+- `xcodebuild clean archive`로 `.xcarchive` 생성
+- 자동 생성한 AdHoc ExportOptions로 `xcodebuild -exportArchive`를 실행해 IPA 생성
+- 생성된 IPA를 GitHub Release asset으로 업로드
+- 최신 iOS manifest와 히스토리 manifest 갱신
+- `releases.json` 갱신
+- 변경된 배포 파일 커밋 후 `git push`
+
+빌드는 건너뛰고 기존 export 경로의 IPA로 배포만 다시 하려면 `--skip-build`를 사용합니다.
+
+```bash
+node scripts/build-and-deploy-ios-release.mjs \
+  --env dev \
+  --version 2.0.68 \
+  --export-path .build/ios/export-dev-2.0.68 \
+  --skip-build \
+  --note "업데이트 내용"
+```
+
+### IPA 생성 후 전체 자동화
+
+IPA 파일을 생성한 뒤 아래 명령을 실행하면 GitHub Releases 업로드부터 다운로드 페이지 배포까지 한 번에 처리합니다.
+
+```bash
+node scripts/deploy-ios-release.mjs \
+  --env dev \
+  --version 2.0.68 \
+  --ipa ./Coffeebean_Dev_2.0.68.ipa \
+  --released-at 2026-07-20 \
+  --note "업데이트 내용"
+```
+
+STG 배포는 `--env stg`와 STG IPA 파일 경로를 사용합니다.
+
+```bash
+node scripts/deploy-ios-release.mjs \
+  --env stg \
+  --version 2.0.68 \
+  --ipa ./Coffeebean_Stg_2.0.68.ipa \
+  --released-at 2026-07-20 \
+  --note "업데이트 내용"
+```
+
+전체 자동화 스크립트가 처리하는 항목:
+
+- GitHub Release 태그 생성 또는 기존 Release 재사용
+  - DEV: `ios-dev-{version}`
+  - STG: `ios-stg-{version}`
+- IPA 파일을 GitHub Release asset으로 업로드
+- 업로드된 IPA URL로 `IPA/manifest_{env}.plist`의 IPA URL과 `bundle-version` 수정
+- `IPA/hist/manifest_{env}_{version}.plist` 생성 또는 갱신
+- `releases.json`의 `ios.{env}` 배열에 버전, 배포일, 업데이트 노트, 이전 버전 다운로드 URL 추가 또는 갱신
+- 변경된 manifest와 `releases.json`만 커밋
+- `git push`로 GitHub Pages 배포 반영
+
+사전 조건:
+
+- GitHub CLI가 설치되어 있어야 합니다.
+- `gh auth status`가 정상이어야 합니다. 토큰이 만료되었으면 `gh auth login -h github.com`으로 다시 로그인합니다.
+- 현재 브랜치가 GitHub Pages 배포 브랜치여야 합니다. 현재 프로젝트는 `main` 브랜치를 기준으로 사용합니다.
+
+커밋이나 푸시 없이 파일 변경까지만 확인하려면 아래 옵션을 붙입니다.
+
+```bash
+node scripts/deploy-ios-release.mjs \
+  --env dev \
+  --version 2.0.68 \
+  --ipa ./Coffeebean_Dev_2.0.68.ipa \
+  --note "업데이트 내용" \
+  --no-commit \
+  --no-push
+```
+
+업데이트 노트가 여러 개라면 `--note`를 여러 번 입력할 수 있습니다.
+
+```bash
+node scripts/deploy-ios-release.mjs \
+  --env dev \
+  --version 2.0.68 \
+  --ipa ./Coffeebean_Dev_2.0.68.ipa \
+  --note "첫 번째 변경사항" \
+  --note "두 번째 변경사항"
+```
+
+### manifest/release JSON만 갱신
+
+IPA 파일을 GitHub Releases 또는 외부 파일 저장소에 업로드한 뒤, 업로드된 HTTPS IPA URL을 사용해 아래 명령을 실행합니다.
+
+```bash
+node scripts/update-ios-release.mjs \
+  --env dev \
+  --version 2.0.68 \
+  --ipa-url https://github.com/hechika/coffeebean/releases/download/ios-dev-2.0.68/Coffeebean_Dev_2.0.68.ipa \
+  --released-at 2026-07-20 \
+  --note "업데이트 내용"
+```
+
+STG 배포는 `--env stg`와 STG IPA URL을 사용합니다.
+
+```bash
+node scripts/update-ios-release.mjs \
+  --env stg \
+  --version 2.0.68 \
+  --ipa-url https://github.com/hechika/coffeebean/releases/download/ios-stg-2.0.68/Coffeebean_Stg_2.0.68.ipa \
+  --released-at 2026-07-20 \
+  --note "업데이트 내용"
+```
+
+스크립트가 자동으로 처리하는 항목:
+
+- `IPA/manifest_{env}.plist`의 IPA URL과 `bundle-version` 수정
+- `IPA/hist/manifest_{env}_{version}.plist` 생성 또는 갱신
+- `releases.json`의 `ios.{env}` 배열에 버전, 배포일, 업데이트 노트, 이전 버전 다운로드 URL 추가 또는 갱신
+
+업데이트 노트가 여러 개라면 `--note`를 여러 번 입력할 수 있습니다.
+
+```bash
+node scripts/update-ios-release.mjs \
+  --env dev \
+  --version 2.0.68 \
+  --ipa-url https://github.com/hechika/coffeebean/releases/download/ios-dev-2.0.68/Coffeebean_Dev_2.0.68.ipa \
+  --note "첫 번째 변경사항" \
+  --note "두 번째 변경사항"
+```
 
 ### 최신 버전 배포 흐름
 
