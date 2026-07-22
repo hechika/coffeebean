@@ -18,6 +18,16 @@
         "notes": [
           "퀵계좌이체 결제수단 추가"
         ]
+      },
+      {
+        "version": "2.0.67",
+        "buildNumber": 2,
+        "releasedAt": "2026-07-22",
+        "downloadUrl": "itms-services://?action=download-manifest&url=https://hechika.github.io/coffeebean/manifests/ios/hist/manifest_dev_2.0.67_build_2.plist",
+        "notes": [
+          "커피빈카노 팝업 이미지, 텍스트 임시 변경(2026년 8월 10일~)",
+          "커피빈카노 팝업이 노출되지 않는 경우 앱 삭제 후 재설치"
+        ]
       }
     ],
     "stg": [
