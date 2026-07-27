@@ -40,6 +40,15 @@
           "커피빈카노 팝업 이미지, 문구 변경 (2026/8/10~)",
           "Toss PG 작업 미반영 버전입니다"
         ]
+      },
+      {
+        "version": "2.0.68",
+        "buildNumber": 1,
+        "releasedAt": "2026-07-27",
+        "downloadUrl": "itms-services://?action=download-manifest&url=https://hechika.github.io/coffeebean/manifests/ios/hist/manifest_stg_2.0.68_build_1.plist",
+        "notes": [
+          "결제 PG사 이관 작업 (KCP -> Toss)"
+        ]
       }
     ]
   },
