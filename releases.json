@@ -6,51 +6,10 @@
         "buildNumber": 1,
         "releasedAt": "2026-06-18",
         "downloadUrl": "itms-services://?action=download-manifest&url=https://hechika.github.io/coffeebean/manifests/ios/hist/manifest_dev_2.0.66_build_1.plist",
-        "notes": [
-          "25주년 기념 선불카드 추가"
-        ]
-      },
-      {
-        "version": "2.0.67",
-        "buildNumber": 1,
-        "releasedAt": "2026-07-10",
-        "downloadUrl": "itms-services://?action=download-manifest&url=https://hechika.github.io/coffeebean/manifests/ios/hist/manifest_dev_2.0.67_build_1.plist",
-        "notes": [
-          "퀵계좌이체 결제수단 추가"
-        ]
-      },
-      {
-        "version": "2.0.67",
-        "buildNumber": 2,
-        "releasedAt": "2026-07-22",
-        "downloadUrl": "itms-services://?action=download-manifest&url=https://hechika.github.io/coffeebean/manifests/ios/hist/manifest_dev_2.0.67_build_2.plist",
-        "notes": [
-          "커피빈카노 팝업 이미지, 텍스트 임시 변경(2026년 8월 10일~)",
-          "커피빈카노 팝업이 노출되지 않는 경우 앱 삭제 후 재설치"
-        ]
-      },
-      {
-        "version": "2.0.67",
-        "buildNumber": 3,
-        "releasedAt": "2026-07-27",
-        "downloadUrl": "itms-services://?action=download-manifest&url=https://hechika.github.io/coffeebean/manifests/ios/hist/manifest_dev_2.0.67_build_3.plist",
-        "notes": [
-          "커피빈카노 제안 팝업 이미지, 문구 변경",
-          "Toss PG 미반영 버전 입니다."
-        ]
+        "notes": ["25주년 기념 선불카드 추가"]
       }
     ],
-    "stg": [
-      {
-        "version": "2.0.67",
-        "buildNumber": 1,
-        "releasedAt": "2026-07-10",
-        "downloadUrl": "itms-services://?action=download-manifest&url=https://hechika.github.io/coffeebean/manifests/ios/hist/manifest_stg_2.0.67_build_1.plist",
-        "notes": [
-          "퀵계좌이체 결제수단 추가"
-        ]
-      }
-    ]
+    "stg": []
   },
   "android": {
     "dev": [],
