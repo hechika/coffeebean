@@ -28,6 +28,16 @@
         "notes": [
           "결제 PG사 이관 작업 (KCP -> Toss)"
         ]
+      },
+      {
+        "version": "2.0.68",
+        "buildNumber": 2,
+        "releasedAt": "2026-08-07",
+        "downloadUrl": "itms-services://?action=download-manifest&url=https://hechika.github.io/coffeebean/manifests/ios/hist/manifest_dev_2.0.68_build_2.plist",
+        "notes": [
+          "최신 커피빈카노 팝업만 표시됩니다(콜롬비아 나리뇨 트로피컬 피에스타)",
+          "Toss PG 작업 내용이 포함되어 있습니다"
+        ]
       }
     ],
     "stg": [
