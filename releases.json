@@ -74,7 +74,17 @@
   },
   "android": {
     "dev": [],
-    "stg": [],
+    "stg": [
+      {
+        "version": "2.0.74",
+        "buildNumber": 1,
+        "releasedAt": "2026-09-01",
+        "downloadUrl": "https://github.com/hechika/coffeebean/releases/download/android-stg-2.0.74-build.1/app-stg-release.apk",
+        "notes": [
+          "Z폴드8 크래시 오류 수정"
+        ]
+      }
+    ],
     "real": []
   }
 }

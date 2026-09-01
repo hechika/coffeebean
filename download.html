@@ -708,6 +708,20 @@
         badge.hidden = false;
       }
 
+      function updateDownloadButton(card, release) {
+        const downloadButton = card.querySelector(".download-button");
+
+        if (
+          card.dataset.platform !== "android" ||
+          !downloadButton ||
+          !release?.downloadUrl
+        ) {
+          return;
+        }
+
+        downloadButton.href = release.downloadUrl;
+      }
+
       function renderReleaseNoteModal(card, releases, currentIndex) {
         releaseNoteState.card = card;
         releaseNoteState.releases = releases.filter(
@@ -853,6 +867,7 @@
           }
 
           updateReleaseDate(card, release);
+          updateDownloadButton(card, release);
           bindReleaseNoteButton(card, release, releaseList);
         });
       }

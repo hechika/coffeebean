@@ -17,6 +17,8 @@
 | `scripts/build-and-deploy-ios-release.mjs`          | iOS 프로젝트 빌드, IPA 생성, GitHub Releases 업로드, Pages 배포 자동화 |
 | `scripts/deploy-ios-release.mjs`                    | iOS IPA 업로드부터 GitHub Pages 배포까지 자동화하는 스크립트           |
 | `scripts/update-ios-release.mjs`                    | iOS manifest와 `releases.json` 업데이트 자동화 스크립트                |
+| `scripts/deploy-android-release.mjs`                | Android APK 업로드부터 GitHub Pages 배포까지 자동화하는 스크립트       |
+| `scripts/update-android-release.mjs`                | Android `releases.json` 업데이트 자동화 스크립트                       |
 
 ## 공통 업데이트 원칙
 
@@ -249,6 +251,68 @@ itms-services://?action=download-manifest&url=https://hechika.github.io/coffeebe
 
 Android는 APK 파일 URL을 다운로드 버튼에 직접 연결합니다. 현재 페이지의 Android 카드에는 DEV, STG, REAL 환경이 있습니다.
 
+### APK 생성 후 전체 자동화
+
+APK 파일을 생성한 뒤 아래 명령을 실행하면 GitHub Releases 업로드부터 다운로드 페이지 배포까지 한 번에 처리합니다.
+
+```bash
+node scripts/deploy-android-release.mjs \
+  --env dev \
+  --version 2.0.68 \
+  --apk ./app-dev-debug.apk \
+  --released-at 2026-09-01 \
+  --note "업데이트 내용"
+```
+
+STG/REAL 배포는 `--env stg`, `--env real`과 각 환경의 APK 파일 경로를 사용합니다.
+
+```bash
+node scripts/deploy-android-release.mjs \
+  --env stg \
+  --version 2.0.68 \
+  --apk ./app-stg-release.apk \
+  --released-at 2026-09-01 \
+  --note "업데이트 내용"
+```
+
+전체 자동화 스크립트가 처리하는 항목:
+
+- GitHub Release 태그 생성
+  - DEV: `android-dev-{version}-build.{buildNumber}`
+  - STG: `android-stg-{version}-build.{buildNumber}`
+  - REAL: `android-real-{version}-build.{buildNumber}`
+- APK 파일을 GitHub Release asset으로 업로드
+- 업로드된 APK URL을 `releases.json`의 `android.{env}` 배열에 추가 또는 갱신
+- 변경된 `releases.json` 커밋
+- `git push`로 GitHub Pages 배포 반영
+
+같은 버전을 다시 배포하면 iOS와 동일하게 다음 빌드 번호로 등록합니다. 예를 들어 기존 `2.0.68 build 1`이 있으면 다음 `2.0.68` 배포는 `build 2`가 되고, 태그는 `android-dev-2.0.68-build.2`가 됩니다.
+
+커밋이나 푸시 없이 파일 변경까지만 확인하려면 아래 옵션을 붙입니다.
+
+```bash
+node scripts/deploy-android-release.mjs \
+  --env dev \
+  --version 2.0.68 \
+  --apk ./app-dev-debug.apk \
+  --note "업데이트 내용" \
+  --no-commit \
+  --no-push
+```
+
+### release JSON만 갱신
+
+APK 파일을 GitHub Releases 또는 외부 파일 저장소에 업로드한 뒤, 업로드된 HTTPS APK URL을 사용해 아래 명령을 실행합니다.
+
+```bash
+node scripts/update-android-release.mjs \
+  --env dev \
+  --version 2.0.68 \
+  --apk-url https://github.com/hechika/coffeebean/releases/download/android-dev-2.0.68-build.1/app-dev-debug.apk \
+  --released-at 2026-09-01 \
+  --note "업데이트 내용"
+```
+
 ### 최신 버전 배포 흐름
 
 1. APK 파일을 생성합니다.
@@ -256,28 +320,21 @@ Android는 APK 파일 URL을 다운로드 버튼에 직접 연결합니다. 현�
    - STG 예시: `app-stg-release.apk`
    - REAL 예시: `app-prod-release.apk`
 
-2. APK 파일을 GitHub Releases 또는 외부 파일 저장소에 업로드합니다.
+2. `scripts/deploy-android-release.mjs`로 APK 파일을 GitHub Releases에 업로드합니다.
 
-3. `download.html`에서 해당 환경의 Android 다운로드 버튼 URL을 새 APK URL로 교체합니다.
-
-```html
-<a class="download-button" href="https://example.com/app-dev-debug.apk">
-  APK 다운로드
-</a>
-```
-
-4. `releases.json`의 `android` 섹션에 버전 정보를 추가합니다.
+3. `releases.json`의 `android` 섹션에 버전 정보가 자동으로 추가됩니다.
 
 ```json
 {
   "version": "2.0.67",
+  "buildNumber": 1,
   "releasedAt": "2026-07-10",
-  "downloadUrl": "https://example.com/app-dev-debug-2.0.67.apk",
+  "downloadUrl": "https://github.com/hechika/coffeebean/releases/download/android-dev-2.0.67-build.1/app-dev-debug.apk",
   "notes": ["퀵계좌이체 결제수단 추가"]
 }
 ```
 
-5. Android 카드에 버전/업데이트 날짜/업데이트 노트를 표시하려면 `releases.json`의 해당 환경 배열에 최신 버전을 등록합니다.
+4. Android 카드의 최신 다운로드 버튼, 버전, 업데이트 날짜, 업데이트 노트는 `releases.json`의 최신 항목을 기준으로 표시됩니다.
 
 ```json
 {
@@ -285,8 +342,9 @@ Android는 APK 파일 URL을 다운로드 버튼에 직접 연결합니다. 현�
     "dev": [
       {
         "version": "2.0.67",
+        "buildNumber": 1,
         "releasedAt": "2026-07-10",
-        "downloadUrl": "https://example.com/app-dev-debug-2.0.67.apk",
+        "downloadUrl": "https://github.com/hechika/coffeebean/releases/download/android-dev-2.0.67-build.1/app-dev-debug.apk",
         "notes": ["퀵계좌이체 결제수단 추가"]
       }
     ],
@@ -299,7 +357,7 @@ Android는 APK 파일 URL을 다운로드 버튼에 직접 연결합니다. 현�
 ### Android에서 특히 주의할 점
 
 - Android는 manifest 파일을 사용하지 않습니다.
-- 최신 다운로드 버튼은 `download.html`의 APK URL이 기준입니다.
+- 최신 다운로드 버튼은 `releases.json`의 최신 `downloadUrl`이 기준입니다.
 - 이전 버전 다운로드는 `releases.json`의 `downloadUrl`이 기준입니다.
 - Android 버전 정보는 `releases.json`에 등록된 값을 사용합니다.
 - APK URL이 Dropbox 공유 링크라면 직접 다운로드 가능한 URL인지 확인해야 합니다.
@@ -338,7 +396,7 @@ Android는 APK 파일 URL을 다운로드 버튼에 직접 연결합니다. 현�
 - `releasedAt`이 있으면 다운로드 카드에 업데이트 날짜가 표시됩니다.
 - `notes`가 있으면 업데이트 노트 버튼이 표시됩니다.
 - `downloadUrl`이 있으면 업데이트 노트 모달에서 해당 버전을 다운로드할 수 있습니다.
-- Android처럼 manifest에서 버전을 읽지 않는 플랫폼은 최신 버전을 배열의 가장 앞에 두는 방식으로 관리하는 것이 좋습니다.
+- Android처럼 manifest에서 버전을 읽지 않는 플랫폼은 스크립트가 배열의 마지막 항목을 최신 버전으로 유지합니다.
 
 ## 배포 전 체크리스트
 
@@ -353,8 +411,8 @@ Android는 APK 파일 URL을 다운로드 버튼에 직접 연결합니다. 현�
 ### Android
 
 - [ ] APK 파일을 업로드했는지 확인
-- [ ] `download.html`의 APK 다운로드 URL을 최신 파일로 수정
-- [ ] `releases.json`에 Android 버전, 업데이트 날짜, 업데이트 노트, 이전 버전 다운로드 URL 추가
+- [ ] `scripts/deploy-android-release.mjs`로 GitHub Release 업로드와 `releases.json` 갱신을 완료
+- [ ] `releases.json`에 Android 버전, 빌드 번호, 업데이트 날짜, 업데이트 노트, 다운로드 URL이 추가되었는지 확인
 - [ ] Android Chrome에서 APK 다운로드가 시작되는지 확인
 - [ ] 기존 앱 업데이트가 실패하면 삭제 후 재설치가 필요한지 안내 확인
 
