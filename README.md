@@ -4,6 +4,10 @@
 
 메인 페이지는 `download.html`이며, 앱 버전/업데이트 날짜/업데이트 노트/이전 버전 다운로드 정보는 `releases.json`과 iOS manifest 파일을 함께 사용해 관리합니다.
 
+## 작성자
+
+dldmswo1209@goodsoft.io
+
 ## 주요 파일
 
 | 파일                                                | 역할                                                                   |
