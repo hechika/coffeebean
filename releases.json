@@ -83,6 +83,15 @@
         "notes": [
           "Z폴드8 크래시 오류 수정"
         ]
+      },
+      {
+        "version": "2.0.74",
+        "buildNumber": 2,
+        "releasedAt": "2026-09-03",
+        "downloadUrl": "https://github.com/hechika/coffeebean/releases/download/android-stg-2.0.74-build.2/app-stg-rel-260903.apk",
+        "notes": [
+          "OneUI 8.5 권한안내 팝업 하단 버튼 레이아웃 이슈 수정"
+        ]
       }
     ],
     "real": []
