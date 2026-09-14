@@ -6,9 +6,7 @@
         "buildNumber": 1,
         "releasedAt": "2026-06-18",
         "downloadUrl": "itms-services://?action=download-manifest&url=https://hechika.github.io/coffeebean/manifests/ios/hist/manifest_dev_2.0.66_build_1.plist",
-        "notes": [
-          "25주년 기념 선불카드 추가"
-        ]
+        "notes": ["25주년 기념 선불카드 추가"]
       },
       {
         "version": "2.0.67",
@@ -25,9 +23,7 @@
         "buildNumber": 1,
         "releasedAt": "2026-07-27",
         "downloadUrl": "itms-services://?action=download-manifest&url=https://hechika.github.io/coffeebean/manifests/ios/hist/manifest_dev_2.0.68_build_1.plist",
-        "notes": [
-          "결제 PG사 이관 작업 (KCP -> Toss)"
-        ]
+        "notes": ["결제 PG사 이관 작업 (KCP -> Toss)"]
       },
       {
         "version": "2.0.68",
@@ -56,9 +52,7 @@
         "buildNumber": 1,
         "releasedAt": "2026-07-27",
         "downloadUrl": "itms-services://?action=download-manifest&url=https://hechika.github.io/coffeebean/manifests/ios/hist/manifest_stg_2.0.68_build_1.plist",
-        "notes": [
-          "결제 PG사 이관 작업 (KCP -> Toss)"
-        ]
+        "notes": ["결제 PG사 이관 작업 (KCP -> Toss)"]
       },
       {
         "version": "2.0.68",
@@ -80,27 +74,21 @@
         "buildNumber": 1,
         "releasedAt": "2026-09-01",
         "downloadUrl": "https://github.com/hechika/coffeebean/releases/download/android-stg-2.0.74-build.1/app-stg-rel_2074.apk",
-        "notes": [
-          "Z폴드8 크래시 오류 수정"
-        ]
+        "notes": ["Z폴드8 크래시 오류 수정"]
       },
       {
         "version": "2.0.74",
         "buildNumber": 2,
         "releasedAt": "2026-09-03",
         "downloadUrl": "https://github.com/hechika/coffeebean/releases/download/android-stg-2.0.74-build.2/app-stg-rel-260903.apk",
-        "notes": [
-          "OneUI 8.5 권한안내 팝업 하단 버튼 레이아웃 이슈 수정"
-        ]
+        "notes": ["OneUI 8.5 권한안내 팝업 하단 버튼 레이아웃 이슈 수정"]
       },
       {
-        "version": "2.0.75",
-        "buildNumber": 1,
+        "version": "2.0.74",
+        "buildNumber": 3,
         "releasedAt": "2026-09-09",
         "downloadUrl": "https://github.com/hechika/coffeebean/releases/download/android-stg-2.0.75-build.1/app-stg-rel-2.0.75.apk",
-        "notes": [
-          "퀵계좌이체 결제수단 제외"
-        ]
+        "notes": ["퀵계좌이체 결제수단 제외"]
       }
     ],
     "real": [
@@ -109,9 +97,7 @@
         "buildNumber": 1,
         "releasedAt": "2026-09-14",
         "downloadUrl": "https://github.com/hechika/coffeebean/releases/download/android-real-2.0.74-build.1/cb_3640_2.0.74.apk",
-        "notes": [
-          "퀵계좌이체 결제수단 제외"
-        ]
+        "notes": ["퀵계좌이체 결제수단 제외"]
       }
     ]
   }

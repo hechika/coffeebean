@@ -142,7 +142,9 @@
                 </button>
                 <a
                   class="download-button"
+                  download
                   href="https://dl.dropbox.com/scl/fi/io7om9xuf5tzx0b7z2mj8/app-dev-debug.apk?rlkey=cejdgirpnbgvyawk6lvvjp8i9&amp;st=67pqjxkn&amp;dl=0"
+                  rel="noopener"
                 >
                   APK 다운로드
                 </a>
@@ -182,7 +184,9 @@
                 </button>
                 <a
                   class="download-button"
+                  download
                   href="https://dl.dropbox.com/scl/fi/0xzg5wf74fpwwmnkwo5gf/app-stg-release.apk?rlkey=7218svu5lfttoonjnd8t8hbv8&amp;st=af9yn265&amp;dl=0"
+                  rel="noopener"
                 >
                   APK 다운로드
                 </a>
@@ -222,7 +226,9 @@
                 </button>
                 <a
                   class="download-button"
+                  download
                   href="https://dl.dropbox.com/scl/fi/1fl9rgca68kwgvt7t236c/app-prod-release.apk?rlkey=4dcnfbi5xh90bbixy9tktq7wl&amp;st=jbkfqy08&amp;dl=0"
+                  rel="noopener"
                 >
                   APK 다운로드
                 </a>
@@ -523,6 +529,7 @@
         currentIndex: 0,
       };
       const themeStorageKey = "coffeebean-download-theme";
+      const androidDownloadFrameId = "android-apk-download-frame";
 
       function applyTheme(theme) {
         const selectedTheme = theme === "dark" ? "dark" : "light";
@@ -720,6 +727,8 @@
         }
 
         downloadButton.href = release.downloadUrl;
+        downloadButton.setAttribute("download", "");
+        downloadButton.setAttribute("rel", "noopener");
       }
 
       function renderReleaseNoteModal(card, releases, currentIndex) {
@@ -778,9 +787,13 @@
         if (downloadButton) {
           if (release.downloadUrl) {
             downloadButton.href = release.downloadUrl;
+            downloadButton.dataset.platform = card.dataset.platform || "";
+            downloadButton.setAttribute("download", "");
+            downloadButton.setAttribute("rel", "noopener");
             downloadButton.hidden = false;
           } else {
             downloadButton.removeAttribute("href");
+            delete downloadButton.dataset.platform;
             downloadButton.hidden = true;
           }
         }
@@ -816,6 +829,53 @@
 
           releaseNoteState.currentIndex += 1;
           renderCurrentReleaseNote();
+        });
+      }
+
+      function isAndroidApkLink(link) {
+        const platform =
+          link.dataset.platform ||
+          link.closest(".download-card")?.dataset.platform ||
+          "";
+
+        if (platform !== "android") {
+          return false;
+        }
+
+        try {
+          return new URL(link.href).pathname.endsWith(".apk");
+        } catch (error) {
+          return false;
+        }
+      }
+
+      function triggerApkDownload(url) {
+        let frame = document.getElementById(androidDownloadFrameId);
+
+        if (!frame) {
+          frame = document.createElement("iframe");
+          frame.id = androidDownloadFrameId;
+          frame.hidden = true;
+          frame.title = "Android APK download";
+          document.body.appendChild(frame);
+        }
+
+        frame.src = "about:blank";
+        window.setTimeout(() => {
+          frame.src = url;
+        }, 0);
+      }
+
+      function setupAndroidDownloadHandling() {
+        document.addEventListener("click", (event) => {
+          const link = event.target.closest("a");
+
+          if (!link || !isAndroidApkLink(link)) {
+            return;
+          }
+
+          event.preventDefault();
+          triggerApkDownload(link.href);
         });
       }
 
@@ -879,6 +939,7 @@
 
       setupDownloadCards();
       setupReleaseNoteNavigation();
+      setupAndroidDownloadHandling();
       setupThemeToggle();
 
       function isMobileAppTestDevice() {
