@@ -103,6 +103,16 @@
         ]
       }
     ],
-    "real": []
+    "real": [
+      {
+        "version": "2.0.74",
+        "buildNumber": 1,
+        "releasedAt": "2026-09-14",
+        "downloadUrl": "https://github.com/hechika/coffeebean/releases/download/android-real-2.0.74-build.1/cb_3640_2.0.74.apk",
+        "notes": [
+          "퀵계좌이체 결제수단 제외"
+        ]
+      }
+    ]
   }
 }
