@@ -38,6 +38,15 @@
           "최신 커피빈카노 팝업만 표시됩니다(콜롬비아 나리뇨 트로피컬 피에스타)",
           "Toss PG 작업 내용이 포함되어 있습니다"
         ]
+      },
+      {
+        "version": "2.0.68",
+        "buildNumber": 3,
+        "releasedAt": "2026-09-30",
+        "downloadUrl": "itms-services://?action=download-manifest&url=https://hechika.github.io/coffeebean/manifests/ios/hist/manifest_dev_2.0.68_build_3.plist",
+        "notes": [
+          "퍼플오더 메인에서 오로라 상품 클릭 시 예약 화면으로 넘어가던 이슈 수정"
+        ]
       }
     ],
     "stg": [
