@@ -78,6 +78,15 @@
           "퀵계좌이체 결제버튼 UI 숨김/노출 처리",
           "2026년 9월 8일부터 퀵계좌이체 버튼이 노출됩니다"
         ]
+      },
+      {
+        "version": "2.0.68",
+        "buildNumber": 3,
+        "releasedAt": "2026-09-30",
+        "downloadUrl": "itms-services://?action=download-manifest&url=https://hechika.github.io/coffeebean/manifests/ios/hist/manifest_stg_2.0.68_build_3.plist",
+        "notes": [
+          "퍼플오더 메인에서 오로라 상품 클릭 시 예약 화면으로 넘어가던 이슈 수정"
+        ]
       }
     ]
   },
