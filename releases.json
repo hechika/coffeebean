@@ -106,6 +106,15 @@
           "카드 추가화면 ViewPager Index error 수정",
           "오로라 멤버스 가입 하드코딩 서버 API 수신 데이터로 처리하도록 수정"
         ]
+      },
+      {
+        "version": "2.0.75",
+        "buildNumber": 2,
+        "releasedAt": "2026-10-07",
+        "downloadUrl": "https://github.com/hechika/coffeebean/releases/download/android-dev-2.0.75-build.2/app-dev-rel-2.0.75.apk",
+        "notes": [
+          "선불카드 구매하기 버튼 활성/비활성 제어 로직 수정"
+        ]
       }
     ],
     "stg": [
