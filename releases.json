@@ -47,6 +47,15 @@
         "notes": [
           "퍼플오더 메인에서 오로라 상품 클릭 시 예약 화면으로 넘어가던 이슈 수정"
         ]
+      },
+      {
+        "version": "2.0.69",
+        "buildNumber": 1,
+        "releasedAt": "2026-10-07",
+        "downloadUrl": "itms-services://?action=download-manifest&url=https://hechika.github.io/coffeebean/manifests/ios/hist/manifest_dev_2.0.69_build_1.plist",
+        "notes": [
+          "오로라 디카페인 할인 추가"
+        ]
       }
     ],
     "stg": [
