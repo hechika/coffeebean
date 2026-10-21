@@ -56,6 +56,17 @@
         "notes": [
           "오로라 디카페인 할인 추가"
         ]
+      },
+      {
+        "version": "2.0.69",
+        "buildNumber": 2,
+        "releasedAt": "2026-10-21",
+        "downloadUrl": "itms-services://?action=download-manifest&url=https://hechika.github.io/coffeebean/manifests/ios/hist/manifest_dev_2.0.69_build_2.plist",
+        "notes": [
+          "앱 최소 지원 OS 버전 업데이트 (iOS13 -> iOS15)",
+          "매장 선택 확인 팝업 UI 수정 및 추가 (주소 텍스트 색상 변경, 매장 설명 추가)",
+          "퍼플오더 결제 확인 팝업에 주문 폐기 관련 안내 문구 추가"
+        ]
       }
     ],
     "stg": [
