@@ -184,6 +184,15 @@
         "notes": [
           "퀵계좌이체 결제수단 제외"
         ]
+      },
+      {
+        "version": "2.0.75",
+        "buildNumber": 1,
+        "releasedAt": "2026-10-22",
+        "downloadUrl": "https://github.com/hechika/coffeebean/releases/download/android-stg-2.0.75-build.1/app-stg-rel-2.0.75.apk",
+        "notes": [
+          "매장 팝업 상세정보 노출, 주소 색상변경, 폐기관련 안내문구 수정"
+        ]
       }
     ],
     "real": [
