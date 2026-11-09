@@ -83,16 +83,7 @@
         "releasedAt": "2026-11-09",
         "downloadUrl": "itms-services://?action=download-manifest&url=https://hechika.github.io/coffeebean/manifests/ios/hist/manifest_dev_2.0.71_build_2.plist",
         "notes": [
-          "신규 기기 UDID 등록 (신성호 실장님)"
-        ]
-      },
-      {
-        "version": "2.0.71",
-        "buildNumber": 3,
-        "releasedAt": "2026-11-09",
-        "downloadUrl": "itms-services://?action=download-manifest&url=https://hechika.github.io/coffeebean/manifests/ios/hist/manifest_dev_2.0.71_build_3.plist",
-        "notes": [
-          "신규 기기 UDID 등록 (신성호 실장님)"
+          "새 기기 UDID 추가 (신성호 실장님)"
         ]
       }
     ],
