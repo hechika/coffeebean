@@ -67,6 +67,15 @@
           "매장 선택 확인 팝업 UI 수정 및 추가 (주소 텍스트 색상 변경, 매장 설명 추가)",
           "퍼플오더 결제 확인 팝업에 주문 폐기 관련 안내 문구 추가"
         ]
+      },
+      {
+        "version": "2.0.71",
+        "buildNumber": 1,
+        "releasedAt": "2026-11-09",
+        "downloadUrl": "itms-services://?action=download-manifest&url=https://hechika.github.io/coffeebean/manifests/ios/hist/manifest_dev_2.0.71_build_1.plist",
+        "notes": [
+          "오로라 5기 대응 UI 수정"
+        ]
       }
     ],
     "stg": [
