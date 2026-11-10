@@ -71,19 +71,10 @@
       {
         "version": "2.0.71",
         "buildNumber": 1,
-        "releasedAt": "2026-11-09",
+        "releasedAt": "2026-11-10",
         "downloadUrl": "itms-services://?action=download-manifest&url=https://hechika.github.io/coffeebean/manifests/ios/hist/manifest_dev_2.0.71_build_1.plist",
         "notes": [
-          "오로라 5기 대응 UI 수정"
-        ]
-      },
-      {
-        "version": "2.0.71",
-        "buildNumber": 2,
-        "releasedAt": "2026-11-09",
-        "downloadUrl": "itms-services://?action=download-manifest&url=https://hechika.github.io/coffeebean/manifests/ios/hist/manifest_dev_2.0.71_build_2.plist",
-        "notes": [
-          "새 기기 UDID 추가 (신성호 실장님)"
+          "오로라 멤버스 5기 대응 UI 수정"
         ]
       }
     ],
