@@ -76,6 +76,15 @@
         "notes": [
           "오로라 멤버스 5기 대응 UI 수정"
         ]
+      },
+      {
+        "version": "2.0.71",
+        "buildNumber": 2,
+        "releasedAt": "2026-11-11",
+        "downloadUrl": "itms-services://?action=download-manifest&url=https://hechika.github.io/coffeebean/manifests/ios/hist/manifest_dev_2.0.71_build_2.plist",
+        "notes": [
+          "PG 결제 화면에서 카드/은행 앱 실행 실패 시 앱스토어 이동 로직 추가"
+        ]
       }
     ],
     "stg": [
