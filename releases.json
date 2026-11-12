@@ -188,6 +188,15 @@
         "buildNumber": 2,
         "releasedAt": "2026-11-12",
         "downloadUrl": "https://github.com/hechika/coffeebean/releases/download/android-dev-2.0.76-build.2/app-dev-rel-2.0.76.apk"
+      },
+      {
+        "version": "2.0.76",
+        "buildNumber": 3,
+        "releasedAt": "2026-11-12",
+        "downloadUrl": "https://github.com/hechika/coffeebean/releases/download/android-dev-2.0.76-build.3/app-dev-rel-2.0.76.apk",
+        "notes": [
+          "카드 구매하기 > 오로라 멤버스 가입하기 버튼 타이틀 오타 수정"
+        ]
       }
     ],
     "stg": [
