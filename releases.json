@@ -136,6 +136,16 @@
           "매장 선택 확인 팝업 UI 수정 및 추가 (주소 텍스트 색상 변경, 매장 설명 추가)",
           "퍼플오더 결제 확인 팝업에 주문 폐기 관련 안내 문구 추가"
         ]
+      },
+      {
+        "version": "2.0.71",
+        "buildNumber": 1,
+        "releasedAt": "2026-11-16",
+        "downloadUrl": "itms-services://?action=download-manifest&url=https://hechika.github.io/coffeebean/manifests/ios/hist/manifest_stg_2.0.71_build_1.plist",
+        "notes": [
+          "오로라 멤버스 5기 대응 UI 수정",
+          "PG 결제 화면에서 카드/은행 앱 실행 실패 시 앱스토어 이동 로직 추가"
+        ]
       }
     ]
   },
