@@ -263,6 +263,15 @@
         "notes": [
           "오로라 5기 대응"
         ]
+      },
+      {
+        "version": "2.0.77",
+        "buildNumber": 1,
+        "releasedAt": "2026-11-18",
+        "downloadUrl": "https://github.com/hechika/coffeebean/releases/download/android-stg-2.0.77-build.1/app-stg-rel-2.0.77.apk",
+        "notes": [
+          "오로라 선불카드 구매 완료 화면 미노출 이슈 수정"
+        ]
       }
     ],
     "real": [
