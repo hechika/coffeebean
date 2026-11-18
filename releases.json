@@ -207,6 +207,15 @@
         "notes": [
           "카드 구매하기 > 오로라 멤버스 가입하기 버튼 타이틀 오타 수정"
         ]
+      },
+      {
+        "version": "2.0.77",
+        "buildNumber": 1,
+        "releasedAt": "2026-11-18",
+        "downloadUrl": "https://github.com/hechika/coffeebean/releases/download/android-dev-2.0.77-build.1/app-dev-rel-2.0.77.apk",
+        "notes": [
+          "오로라 선불카드 구매 완료 화면 미노출 이슈 수정"
+        ]
       }
     ],
     "stg": [
