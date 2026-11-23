@@ -272,6 +272,16 @@
         "notes": [
           "오로라 선불카드 구매 완료 화면 미노출 이슈 수정"
         ]
+      },
+      {
+        "version": "2.0.78",
+        "buildNumber": 1,
+        "releasedAt": "2026-11-23",
+        "downloadUrl": "https://github.com/hechika/coffeebean/releases/download/android-stg-2.0.78-build.1/app-stg-rel-2.0.78.apk",
+        "notes": [
+          "결제 WebView Scheme 오류 수정",
+          "기타 crash fix"
+        ]
       }
     ],
     "real": [
